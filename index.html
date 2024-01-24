@@ -1,0 +1,36 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Coloring Book</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Online Coloring Book</h1>
+  <canvas id="coloringCanvas" width="800" height="600"></canvas>
+  <div id="controls">
+    <label for="brushSize">Brush Size:</label>
+    <input type="range" id="brushSize" min="1" max="20" value="10">
+
+    <label for="colorPicker">Color:</label>
+    <input type="color" id="colorPicker" value="#000000">
+
+    <button id="eraserBtn">Eraser</button>
+    <button id="clearBtn">Clear</button>
+    <button id="saveBtn">Save</button>
+
+    <!-- Added template selection dropdown -->
+    <div id="templateSelect">
+      <label for="template">Choose Template:</label>
+      <select id="templateSelect">
+        <option value="template1.png">Template 1</option>
+        <option value="template2.png">Template 2</option>
+        <!-- Add more template options as needed -->
+      </select>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
