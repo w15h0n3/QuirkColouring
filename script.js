@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const templateSelect = document.getElementById('templateSelect');
   
     let isDrawing = false;
+    let templateImage = new Image();
   
     // Load the default template
     loadTemplate('template1.png');
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.addEventListener('mouseout', stopDrawing);
   
     eraserBtn.addEventListener('click', enableEraser);
-    clearBtn.addEventListener('click', clearCanvas);
+    clearBtn.addEventListener('click', clearUserDrawings);
     saveBtn.addEventListener('click', saveCanvas);
   
     // Handle template selection change
@@ -30,11 +31,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   
     function loadTemplate(templateUrl) {
-      const img = new Image();
-      img.src = `/templates/${templateUrl}`;
-      img.onload = function () {
+      templateImage.src = `https://raw.githubusercontent.com/w15h0n3/QuirkColouring/main/${templateUrl}`;
+      templateImage.onload = function () {
+        // Draw the template first
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        context.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
       };
     }
   
@@ -49,9 +50,15 @@ document.addEventListener('DOMContentLoaded', function () {
       const x = e.clientX - canvas.getBoundingClientRect().left;
       const y = e.clientY - canvas.getBoundingClientRect().top;
   
-      context.fillStyle = eraserBtn.classList.contains('active') ? '#ffffff' : colorPicker.value;
+      context.globalCompositeOperation = eraserBtn.classList.contains('active') ? 'destination-out' : 'source-over';
+      context.fillStyle = colorPicker.value;
       const size = brushSizeInput.value;
+  
+      // Draw the user's drawings with the 'source-in' composite operation
       context.fillRect(x, y, size, size);
+      context.globalCompositeOperation = 'source-in';
+      context.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
+      context.globalCompositeOperation = 'source-over'; // Reset the composite operation
     }
   
     function stopDrawing() {
@@ -67,8 +74,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   
-    function clearCanvas() {
+    function clearUserDrawings() {
+      // Clear the entire canvas, including the template
       context.clearRect(0, 0, canvas.width, canvas.height);
+      loadTemplate(templateSelect.value);
     }
   
     function saveCanvas() {
